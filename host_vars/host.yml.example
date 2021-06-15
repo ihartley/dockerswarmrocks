@@ -1,0 +1,11 @@
+---
+swarmpit_domain: swarmpit.local.example.com
+swarmprom_domain: local.example.com
+swarmprom_admin_user: admin
+swarmprom_admin_password: changethis
+swarmprom_admin_password_hash: "$$apr1$$IlkpcFzw$$237GSEEQLv.YBSXfAXIha1"
+traefik_email: certs@example.com
+traefik_domain: traefik.local.example.com
+traefik_username: admin
+traefik_password: changethis
+portainer_domain: portainer.local.example.com

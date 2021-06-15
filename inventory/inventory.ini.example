@@ -1,0 +1,2 @@
+[swarm]
+local.example.com ansible_user=ubuntu

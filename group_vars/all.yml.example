@@ -1,0 +1,25 @@
+---
+#le_dns_auth:
+#  provier: azure
+#  credentials:
+#    - { name: azure_client_id, value: "xxxxx"}
+#    - { name: azure_client_secret, value: "xxxxx"}
+#    - { name: azure_subscription_id, value: "xxxxx"}
+#    - { name: azure_tenant_id, value: "xxxxx"}
+#    - { name: azure_resource_group, value: "xxxxx"}
+
+#le_dns_auth:
+#  provier: aws
+#  credentials:
+#    - { name: aws_access_key_id, value: "xxxxx"}
+#    - { name: aws_secret_access_key, value: "xxxxx"}
+#    - { name: aws_region, value: "xxxxx"}
+#    - { name: aws_hosted_zone_id, value: "xxxxx"}
+
+
+
+
+
+
+
+

@@ -1,0 +1,67 @@
+---
+- name: Add gitlab root password secret
+  community.docker.docker_secret:
+    name: gitlab_root_password
+    data: "{{ gitlab_root_password }}"
+    state: present
+  tags:
+  - secrets
+  - config
+
+- name: Create the data directory
+  file:
+    path: /srv/gitlab
+    state: directory
+    mode: '0755'
+  tags:
+  - setup
+
+- name: Create the Swarm appdir
+  file:
+    path: /swarm/gitlab
+    state: directory
+    mode: '0755'
+  tags:
+  - setup
+  - config
+
+- name: Get node info
+    self: true
+  register: node_info
+  tags:
+  - always
+
+- name: Merge labels
+  community.docker.docker_node:
+    hostname: "{{ node_info.nodes[0].ID }}"
+    labels:
+      swarmpit.db-data: "true"
+    labels_state: merge
+  tags:
+  - docker-labels
+  - config
+
+- name: Install docker-compose.yml
+  template:
+    src: gitlab.yml.j2
+    dest: /swarm/gitlab/docker-compose.yml
+  tags:
+  - compose
+  - config
+
+- name: Install gitlab.rb
+  template:
+    src: gitlab.rb.j2
+    dest: /swarm/gitlab/gitlab.rb
+  tags:
+  - config
+
+- name: Deploy Gitlab stack
+  community.docker.docker_stack:
+    state: present
+    name: gitlab
+    compose:
+      - /swarm/gitlab/docker-compose.yml
+  tags:
+  - compose
+  - deploy

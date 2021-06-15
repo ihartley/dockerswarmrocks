@@ -1,0 +1,5 @@
+swarmprom_domain: local.example.com
+swarmprom_admin_user: admin
+swarmprom_admin_password: changethis
+swarmprom_admin_password_hash: "$$apr1$$IlkpcFzw$$237GSEEQLv.YBSXfAXIha1"
+swarmprom_repo_url: "https://github.com/stefanprodan/swarmprom.git"

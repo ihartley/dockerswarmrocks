@@ -1,0 +1,30 @@
+---
+- name: Init Swarm
+  community.docker.docker_swarm:
+    state: present
+  register: swarm_info
+  tags:
+  - setup
+
+- name: Get node info
+  community.docker.docker_node_info:
+    self: true
+  register: node_info
+  tags:
+  - always
+
+- name: Swarm Info
+  ansible.builtin.debug:
+    msg:
+    - "Manager Key: {{ swarm_info.swarm_facts.JoinTokens.Manager }}"
+    - "Worker Key: {{ swarm_info.swarm_facts.JoinTokens.Worker }}"
+  tags:
+  - always
+
+- name: Swarm Nodes
+  ansible.builtin.debug:
+    msg:
+    - "{{ item.ID }} - {{ item.Spec.Role}} - {{ item.Status.Addr }}"
+  loop: "{{ node_info.nodes }}"
+  tags:
+  - always

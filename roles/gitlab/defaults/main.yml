@@ -1,0 +1,2 @@
+gitlab_domain: gitlab.local.example.com
+gitlab_root_password: changethis

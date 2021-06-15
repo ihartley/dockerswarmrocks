@@ -1,0 +1,34 @@
+---
+- name: Get node info
+  community.docker.docker_node_info:
+    self: true
+  register: node_info
+  tags:
+  - always
+
+- name: Git checkout Swarmprom config
+  ansible.builtin.git:
+    repo: "{{ swarmprom_repo_url }}"
+    dest: /swarm/swarmprom
+    force: true
+  tags:
+  - setup
+  - config
+
+- name: Install docker-compose.yml
+  template:
+    src: swarmprom.yml.j2
+    dest: /swarm/swarmprom/docker-compose.yml
+  tags:
+  - compose
+  - config
+
+- name: Deploy Swarmprom stack
+  community.docker.docker_stack:
+    state: present
+    name: swarmprom
+    compose:
+      - /swarm/swarmprom/docker-compose.yml
+  tags:
+  - compose
+  - deploy

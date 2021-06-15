@@ -1,0 +1,5 @@
+traefik_email: certs@example.com
+traefik_domain: traefik.local.example.com
+traefik_passwd_file: /var/traefik/passwd
+traefik_username: admin
+traefik_password: changethis

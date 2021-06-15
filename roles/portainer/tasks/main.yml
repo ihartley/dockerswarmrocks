@@ -1,0 +1,44 @@
+---
+- name: Get node info
+  community.docker.docker_node_info:
+    self: true
+  register: node_info
+  tags:
+  - always
+
+- name: Merge labels
+  community.docker.docker_node:
+    hostname: "{{ node_info.nodes[0].ID }}"
+    labels:
+      portainer.portainer-data: "true"
+    labels_state: merge
+  tags:
+  - docker-labels
+  - config
+
+- name: Create the Swarm appdir
+  file:
+    path: /swarm/portainer
+    state: directory
+    mode: '0755'
+  tags:
+  - setup
+  - config
+
+- name: Install docker-compose.yml
+  template:
+    src: portainer.yml.j2
+    dest: /swarm/portainer/docker-compose.yml
+  tags:
+  - compose
+  - config
+
+- name: Deploy Portainer stack
+  community.docker.docker_stack:
+    state: present
+    name: portainer
+    compose:
+      - /swarm/portainer/docker-compose.yml
+  tags:
+  - compose
+  - deploy

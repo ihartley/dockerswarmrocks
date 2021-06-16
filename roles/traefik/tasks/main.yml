@@ -52,9 +52,21 @@
   - compose
   - config
 
-- name: Set decrets for DNS-01 challenge
-  include_tasks:
-    file: secrets.yml
+- name: Add dns provider dns secrets
+  community.docker.docker_secret:
+    name: "{{ item.name }}"
+    data: "{{ item.value }}"
+    state: present
+  loop: "{{ le_dns_auth.credentials }}"
+  no_log: true
+  tags:
+  - secrets
+  - config
+#- name: Set decrets for DNS-01 challenge
+#  include_tasks:
+#    file: secrets.yml
+#  tags:
+#  - secrets
 
 - name: Deploy stack from a compose file
   community.docker.docker_stack:

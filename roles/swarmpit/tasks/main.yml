@@ -1,5 +1,6 @@
 ---
 - name: Get node info
+  community.docker.docker_node_info:
     self: true
   register: node_info
   tags:

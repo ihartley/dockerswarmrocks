@@ -9,3 +9,6 @@ traefik_domain: traefik.local.example.com
 traefik_username: admin
 traefik_password: changethis
 portainer_domain: portainer.local.example.com
+
+gitlab_domain: gitlab.example.com
+gitlab_root_password: changethis

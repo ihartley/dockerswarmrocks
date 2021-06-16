@@ -19,7 +19,7 @@
     - "Manager Key: {{ swarm_info.swarm_facts.JoinTokens.Manager }}"
     - "Worker Key: {{ swarm_info.swarm_facts.JoinTokens.Worker }}"
   tags:
-  - always
+  - setup
 
 - name: Swarm Nodes
   ansible.builtin.debug:
@@ -27,4 +27,4 @@
     - "{{ item.ID }} - {{ item.Spec.Role}} - {{ item.Status.Addr }}"
   loop: "{{ node_info.nodes }}"
   tags:
-  - always
+  - setup

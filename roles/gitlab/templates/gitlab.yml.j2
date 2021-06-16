@@ -4,7 +4,6 @@ services:
     image: gitlab/gitlab-ce:latest
     ports:
       - "2222:22"
-      - "8443:443"
     volumes:
       - gitlab-data:/var/opt/gitlab
       - gitlab-logs:/var/log/gitlab
@@ -40,7 +39,6 @@ services:
     image: gitlab/gitlab-runner:alpine
     networks:
       - net
-      - traefik-public
     deploy:
       mode: replicated
       replicas: 1

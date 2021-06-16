@@ -26,6 +26,7 @@
   - config
 
 - name: Get node info
+  community.docker.docker_node_info:
     self: true
   register: node_info
   tags:
@@ -35,7 +36,7 @@
   community.docker.docker_node:
     hostname: "{{ node_info.nodes[0].ID }}"
     labels:
-      swarmpit.db-data: "true"
+      gitlab.gitlab-data: "true"
     labels_state: merge
   tags:
   - docker-labels
@@ -55,6 +56,14 @@
     dest: /swarm/gitlab/gitlab.rb
   tags:
   - config
+
+- name: Remove Gitlab stack
+  community.docker.docker_stack:
+    state: absent
+    name: gitlab
+  tags:
+  - never
+  - destroy
 
 - name: Deploy Gitlab stack
   community.docker.docker_stack:

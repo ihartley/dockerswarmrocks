@@ -83,7 +83,7 @@ services:
       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
       # Use the DNS Challenge for Let's Encrypt
       - --certificatesresolvers.le.acme.dnschallenge=true
-      - --certificatesresolvers.le.acme.dnschallenge.provider={{ le_dns_auth.provider.azure }}
+      - --certificatesresolvers.le.acme.dnschallenge.provider={{ le_dns_auth.provider }}
       # Enable the access log, with HTTP requests
       - --accesslog
       # Enable the Traefik log, for configurations and errors
@@ -95,13 +95,14 @@ services:
       # any other service that needs to be publicly available with HTTPS
       - traefik-public
     secrets:
+{# This formatting is fucked, but correct for the output. Don't touch it without verifying whitespace in the output #}
     {% for cred in le_dns_auth.credentials %}
-      - {{ cred.name }}
+  - {{ cred.name }}
     {% endfor %}
-    environment:
-    {% for cred in le_dns_auth.credentials %}
-      - {{ cred.name|upper }}_FILE=/run/secrets/{{ cred.name }}
-    {% endfor %}
+environment:
+  {% for cred in le_dns_auth.credentials %}
+    - {{ cred.name|upper }}_FILE=/run/secrets/{{ cred.name }}
+  {% endfor %}
 
 volumes:
   # Create a volume to store the certificates, there is a constraint to make sure
@@ -116,13 +117,7 @@ networks:
     external: true
 
 secrets:
-  azure_dns_client_id:
+{% for cred in le_dns_auth.credentials %}
+  {{ cred.name }}
     external: true
-  azure_dns_client_secret:
-    external: true
-  azure_dns_subscription_id:
-    external: true
-  azure_dns_tenant_id:
-    external: true
-  azure_dns_resource_group:
-    external: true
+{% endfor %}

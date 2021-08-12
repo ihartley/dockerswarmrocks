@@ -84,6 +84,8 @@ services:
       # Use the DNS Challenge for Let's Encrypt
       - --certificatesresolvers.le.acme.dnschallenge=true
       - --certificatesresolvers.le.acme.dnschallenge.provider={{ le_dns_auth.provider }}
+      # Set a DNS server to resolve the challenge. May be needed if you have a public and private zone in AWS
+      - --certificatesresolvers.le.acme.dnschallenge.resolvers={{ le_dns_auth.resolvers }}
       # Enable the access log, with HTTP requests
       - --accesslog
       # Enable the Traefik log, for configurations and errors
@@ -101,7 +103,8 @@ services:
     {% endfor %}
 environment:
   {% for cred in le_dns_auth.credentials %}
-    - {{ cred.name|upper }}_FILE=/run/secrets/{{ cred.name }}
+   - {{ cred.name|upper }}{{ "_FILE" if cred.as_file else "" }}={% if cred.as_file %}/run/secrets/{{ cred.name }}{% else %}{{ cred.value }}
+{% endif %}
   {% endfor %}
 
 volumes:

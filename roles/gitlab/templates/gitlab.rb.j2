@@ -1,5 +1,33 @@
 external_url 'https://{{ gitlab_domain }}/'
+# Listen on a different port since this isn't the only thing running here
+# This may not be necessary
 nginx['listen_port'] = 8443
+# Turn off SSL, Traefik will handle that
 nginx['listen_https'] = false
 letsencrypt['enable'] = false
+# Use a Docker secret to init the root password
 gitlab_rails['initial_root_password'] = File.read('/run/secrets/gitlab_root_password')
+
+# So we can got to Prometheus from outside the Docker host
+prometheus['listen_address'] = '0.0.0.0:9090'
+
+registry_external_url 'https://registry.{{ gitlab_domain }}'
+gitlab_rails['registry_enabled'] = true
+gitlab_rails['api_url'] = 'https://registry.{{ gitlab_domain }}'
+registry['enable'] = true
+# Once again, we don't need nginx proxying for us since we have Traefik
+registry_nginx['enable'] = false
+registry['registry_http_addr'] = "0.0.0.0:5000"
+
+gitlab_rails['smtp_enable'] = true
+gitlab_rails['smtp_address'] = '{{ gitlab_smtp_address }}'
+gitlab_rails['smtp_port'] = 587
+gitlab_rails['smtp_user_name'] = '{{ gitlab_smtp_user_name }}'
+gitlab_rails['smtp_password'] = '{{ gitlab_smtp_password }}'
+gitlab_rails['smtp_domain'] = '{{ gitlab_smtp_domain }}'
+gitlab_rails['smtp_authentication'] = '{{ gitlab_smtp_authentication }}'
+gitlab_rails['smtp_enable_starttls_auto'] = true
+
+#gitlab_rails['omniauth_providers'] = [
+#
+#]

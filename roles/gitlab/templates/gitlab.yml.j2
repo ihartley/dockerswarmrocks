@@ -1,7 +1,7 @@
 version: "3.6"
 services:
   gitlab:
-    image: gitlab/gitlab-ce:latest
+    image: gitlab/{{ gitlab_image }}:{{ gitlab_version }}
     ports:
       - "2222:22"
     volumes:
@@ -9,9 +9,9 @@ services:
       - gitlab-logs:/var/log/gitlab
       - gitlab-config:/etc/gitlab
     environment:
-      GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')"
+      GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')" # Tell GitLab what config to use
     configs:
-      - source: gitlab
+      - source: gitlab # Pass-though the config defined below
         target: /omnibus_config.rb
     secrets:
       - gitlab_root_password
@@ -35,6 +35,13 @@ services:
         - traefik.http.routers.gitlab-https.tls=true
         - traefik.http.routers.gitlab-https.tls.certresolver=le
         - traefik.http.services.gitlab.loadbalancer.server.port=8443
+        # registry
+        - traefik.http.routers.gitlab-registry.rule=Host(`registry.{{ gitlab_domain }}`)
+        - traefik.http.routers.gitlab-registry.tls=true
+        - traefik.http.routers.gitlab-registry.tls.certresolver=le
+        - traefik.http.routers.gitlab-registry.entrypoints=https
+        - traefik.http.routers.gitlab-registry.service=gitlab-registry
+        - traefik.http.services.gitlab-registry.loadbalancer.server.port=5000
   gitlab-runner:
     image: gitlab/gitlab-runner:alpine
     networks:
@@ -44,6 +51,7 @@ services:
       replicas: 1
 configs:
   gitlab:
+    name: gitlab-{{ ansible_date_time.epoch }} # Docker configs need unique names when updating a swarm deployment
     file: ./gitlab.rb
 secrets:
   gitlab_root_password:

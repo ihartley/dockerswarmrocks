@@ -1,2 +1,32 @@
+gitlab_image: gitlab-ce
+gitlab_version: latest
+
 gitlab_domain: gitlab.local.example.com
 gitlab_root_password: changethis
+gitlab_token: GITLAB_RUNNER_TOKEN
+gitlab_registry_domain: registry.gitlab.local.example.com
+
+gitlab_smtp_enable: true
+gitlab_smtp_address: smtp.example.com
+gitlab_smtp_port: 587
+gitlab_smtp_user_name: root
+gitlab_smtp_password: password
+gitlab_smtp_domain: example.com
+gitlab_smtp_authentication: login
+gitlab_smtp_enable_starttls_auto: true
+
+gitlab_email_from: gitlab@cgitlab.example.com
+gitlab_email_reply_to: noreply@gitlab.example.com
+
+gitlab_omniauth_azuread_enabled: false
+
+gitlab_omniauth_keycloak_enabled: false
+gitlab_keycloak_redirect_uri: https://gitlab.example.com/users/auth/openid_connect/callback
+gitlab_keycloak_realm: https://keycloak.example.com/auth/realms/myrealm
+gitlab_keycloak_client_id: CLIENT_ID
+gitlab_keycloak_client_secret: CLIENT_SECRET
+
+gitlab_omniauth_ldap_enabled: false
+gitlab_ldap_server: ldap.example.com
+gitlab_ldap_bind_dn: LDAP_BIND_DN
+gitlab_ldap_bind_pw: LDAP_BIND_PW
